@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts from Build
+        uses: actions/download-artifact@v4
+        with:
+          # This assumes a build was triggered by the tag push
+          name: web-app-bundle-ubuntu-latest-${{ github.run_id }}
+          path: ./release-assets
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: USTP CI/CD Tetris ${{ github.ref_name }}
+          files: ./release-assets/**
+          generate_release_notes: true
+          draft: false
+          prerelease: false
