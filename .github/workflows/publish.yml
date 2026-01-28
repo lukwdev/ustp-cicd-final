@@ -1,7 +1,11 @@
 name: Publish to GitHub Pages
 
 on:
-  workflow_dispatch: # Allows manual triggering
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Run ID of the Build workflow to download artifacts from (optional if automated)'
+        required: false
   workflow_run:
     workflows: ["Build and Artifacts"]
     types: [completed]
@@ -10,6 +14,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Run if manual, or if the triggered build was successful
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
@@ -20,9 +25,11 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          # Match the name used in your Build workflow
-          name: web-app-bundle-ubuntu-latest-${{ github.event.workflow_run.id || github.run_id }}
+          name: web-app-bundle-ubuntu-latest # Matches the simplified name in build.yml
           path: public
+          # Logic: Use input ID (manual) OR triggering workflow ID (auto)
+          run-id: ${{ inputs.run_id || github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

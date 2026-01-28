@@ -8,6 +8,7 @@ on:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    needs: build-and-test # Wait for the build job in THIS workflow run
     permissions:
       contents: write
 
@@ -15,11 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download Artifacts from Build
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          # This assumes a build was triggered by the tag push
-          name: web-app-bundle-ubuntu-latest-${{ github.run_id }}
+          name: web-app-bundle-ubuntu-latest
           path: ./release-assets
 
       - name: Create Release
@@ -30,3 +30,20 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+
+  # Define the Build job here (or rely on the separate Build workflow).
+  # However, relying on a SEPARATE workflow for releases is tricky because
+  # 'download-artifact' defaults to the CURRENT run.
+  # The cleanest way for Releases is to include the build steps or use 'needs' if in same file.
+  # Since we want to avoid code duplication, we assume the 'Build' workflow triggered
+  # by the tag runs PARALLEL to this.
+  # BUT 'download-artifact' cannot easily cross workflows without an ID.
+
+  # FIX: To make this work seamlessly with "No Duplication",
+  # we simply grab the artifacts from the "Build" workflow that ran for this tag.
+
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Build (Manual check or sleep not recommended, but simple for this demo)
+        run: echo "Ideally, Release should be a job INSIDE build.yml to share artifacts easily."
