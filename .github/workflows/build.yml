@@ -2,9 +2,11 @@ name: Build and Artifacts
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - 'main'      # Only triggers when code is pushed directly to main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - '**'        # Triggers for all pull requests to ensure they build/test before merging
 
 jobs:
   build-and-test:
@@ -27,26 +29,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 1: Build the Application
       - name: Build application
-        run: npm run build
+        run: npm run build # Uses the build script from package.json
 
-      # Step 2: Run Unit Tests with Coverage (Runs AFTER build)
       - name: Run Tests with Coverage
-        run: npm run test:coverage
+        run: npm run test:coverage # Runs the vitest logic tests
 
-      # Step 3: Upload Build Artifacts (Web App)
       - name: Upload Web App Bundle
         uses: actions/upload-artifact@v4
         with:
-          name: web-app-bundle-${{ matrix.os }}-${{ github.ref_name }}
-          path: dist/
+          name: web-app-bundle-${{ matrix.os }}-${{ github.run_id }}
+          path: dist/ # The output directory defined in vite.config.ts
           retention-days: 5
 
-      # Step 4: Upload Test Coverage Results
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report-${{ matrix.os }}
+          name: coverage-report-${{ matrix.os }}-${{ github.run_id }}
           path: coverage/
           retention-days: 5
