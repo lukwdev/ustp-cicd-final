@@ -9,6 +9,11 @@ import { resolve } from 'path';
 const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname;
 
 export default defineConfig({
+    // CONDITIONAL BASE PATH:
+    // Use the repository name when running in GitHub Actions (CI/CD),
+    // but use the default '/' for local development.
+    base: process.env.GITHUB_ACTIONS ? "/ustp-cicd-final/" : "/",
+
     plugins: [
         react(),
         tailwindcss(),
