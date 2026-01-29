@@ -1,0 +1,23 @@
+name: Markdown Spell Check
+
+on:
+  pull_request:
+    branches: ['**']
+
+jobs:
+  check-spelling:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run CSpell
+        uses: streetsidesoftware/cspell-action@v6
+        with:
+          # Check all markdown files recursively
+          files: '**/*.md'
+          # Fail the workflow if issues are found
+          strict: true
+          # Use the config file defined in Step 2
+          config: './cspell.json'
