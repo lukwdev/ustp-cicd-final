@@ -1,8 +1,6 @@
 # USTP CI/CD Tetris
 
-![Build Status](https://github.com/lukwdev/ustp-cicd-final/actions/workflows/build.yml/badge.svg?event=push)
-![Publish Status](https://github.com/lukwdev/ustp-cicd-final/actions/workflows/publish.yml/badge.svg)
-![Release Status](https://github.com/lukwdev/ustp-cicd-final/actions/workflows/release.yml/badge.svg)
+![Workflow Status](https://github.com/lukwdev/ustp-cicd-final/actions/workflows/workflow.yml/badge.svg?event=push)
 A Tetris web application built with React, Vite, and TypeScript, featuring a fully automated CI/CD pipeline using GitHub Actions.
 
 ## 🔗 Live Demo
