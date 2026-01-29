@@ -1,0 +1,16 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "vscode",
+    "github",
+    "npmjs",
+    "node_modules",
+    "zshrc"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "coverage/**"
+  ]
+}
