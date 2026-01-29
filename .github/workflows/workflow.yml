@@ -121,6 +121,16 @@ jobs:
       - name: Display downloaded files (Debug)
         run: ls -R release-assets
 
+      - name: Zip Artifacts to avoid name collisions
+        run: |
+          cd release-assets
+          # Loop through each artifact folder and zip it
+          for dir in */; do
+            zip -r "${dir%/}.zip" "$dir"
+          done
+          # Optional: List files to verify
+          ls -l *.zip
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
